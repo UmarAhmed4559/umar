@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: E-Commerce Inventory Management API
+  version: 1.0.0
+paths:
+  /getInventory:
+    get:
+      summary: Retrieve Inventory Levels
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                - variant_id: 123456789
+                  inventory_quantity: 50
+                  available_quantity: 45
+                  updated_at: "2024-01-23T12:34:56Z"
+
+  /updateInventory/{variantId}:
+    put:
+      summary: Update Inventory Level
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              inventory_item:
+                quantity: 60
+      responses:
+        '200':
+          description: Inventory level updated successfully
+          content:
+            application/json:
+              example:
+                variant_id: 123456789
+                inventory_quantity: 60
+                available_quantity: 55
+                updated_at: "2024-01-23T13:45:00Z"
+
+  /getStockItem/{variantId}:
+    get:
+      summary: Retrieve Stock Item
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                variant_id: 123456789
+                cost: 20.0
+                created_at: "2024-01-23T10:00:00Z"
+                updated_at: "2024-01-23T10:30:00Z"
+
+  /createProduct:
+    post:
+      summary: Create Product with Initial Inventory
+      requestBody:
+        content:
+          application/json:
+            example:
+              product:
+                name: "New Product"
+                variant_id: 987654321
+                initial_quantity: 100
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              example:
+                variant_id: 987654321
+                inventory_quantity: 100
+                available_quantity: 100
+                updated_at: "2024-01-23T14:00:00Z"
+
+  /adjustInventory/{variantId}:
+    post:
+      summary: Adjust Inventory Levels
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              adjustment:
+                quantity: -10
+      responses:
+        '200':
+          description: Inventory adjusted successfully
+          content:
+            application/json:
+              example:
+                variant_id: 123456789
+                inventory_quantity: 50
+                available_quantity: 45
+                updated_at: "2024-01-23T14:30:00Z"
+
+  /markOutOfStock/{variantId}:
+    put:
+      summary: Mark Product as Out of Stock
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product marked as out of stock successfully
+          content:
+            application/json:
+              example:
+                variant_id: 123456789
+                is_out_of_stock: true
+                updated_at: "2024-01-23T15:00:00Z"
+
+  /getLowStockProducts:
+    get:
+      summary: Retrieve Low Stock Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                - variant_id: 987654321
+                  inventory_quantity: 15
+                  available_quantity: 10
+                  updated_at: "2024-01-23T15:30:00Z"
+                - variant_id: 456789012
+                  inventory_quantity: 20
+                  available_quantity: 18
+                  updated_at: "2024-01-23T16:00:00Z"
+
+  /transferStock/{variantId}:
+    post:
+      summary: Transfer Stock Between Locations
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              transfer:
+                quantity: 5
+                destination_location: "Warehouse B"
+      responses:
+        '200':
+          description: Stock transferred successfully
+          content:
+            application/json:
+              example:
+                variant_id: 123456789
+                from_location: "Warehouse A"
+                to_location: "Warehouse B"
+                transferred_quantity: 5
+                updated_at: "2024-01-23T16:30:00Z"
+
+  /getInventoryHistory/{variantId}:
+    get:
+      summary: Retrieve Inventory History
+      parameters:
+        - in: path
+          name: variantId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                - timestamp: "2024-01-23T17:00:00Z"
+                  quantity_change: 10
+                  reason: "Restocked"
+                - timestamp: "2024-01-23T17:30:00Z"
+                  quantity_change: -5
+                  reason: "Sold"
